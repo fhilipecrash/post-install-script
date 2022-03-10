@@ -3,7 +3,7 @@
 import sys
 
 print("Post install script by Fhilipe")
-print("Would you like to perform the post install configuration? [S/n]\n")
+print("Would you like to perform the post install configuration? [Y/n]\n")
 
 if sys.platform.startswith('linux'):
   print("OS: Arch Linux")
