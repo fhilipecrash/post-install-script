@@ -33,10 +33,15 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     echo "Bye"
   else
     ## Enable multilib
-    # Use SED to uncomment multilib on /etc/pacman.conf
+    echo "Enabling multilib repo"
+    sudo sed -i '/multilib\]/,+1 s/^#//' /etc/pacman.conf
 
     ## Git install
     sudo pacman -Sy git
+
+    ## Clone Dotfiles
+    echo "Cloning Dotfiles"
+    git clone https://github.com/FhilipeCrash/Dotfiles
 
     ## Yay install
     echo "Installing Yay"
@@ -58,14 +63,16 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
     git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
     cp ~/Dotfiles/.zshrc ~/
+    cp ~/Dotfiles/.yarnrc ~/
+    cp -r ~/Dotfiles/.local/share/applications/ ~/.local/share/
 
     ## Xorg and drivers install
     echo "Installing Xorg and drivers"
-    yay -S 
+    yay -S xorg-xinit xorg-xinit xorg-xkill xf86-video-intel 
 
     ## Gnome minimal install
     echo "Installing GNOME with mutter-rounded"
-    yay -S gnome-shell gnome-tweak-tool gnome-control-center xdg-user-dirs gdm mutter-rounded
+    yay -S gnome-shell gnome-tweak-tool gnome-control-center xdg-user-dirs gdm mutter-rounded gnome-online-accounts
     
     ## Gnome tweaks
     gsettings set org.gnome.shell.app-switcher current-workspace-only true
@@ -75,14 +82,54 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     ## Install useful programs
     echo "Installing all environment programs"
     echo -e "\n[sublime-text]\nServer = https://download.sublimetext.com/arch/stable/x86_64" | sudo tee -a /etc/pacman.conf
-    curl -O https://download.sublimetext.com/sublimehq-pub.gpg && sudo pacman-key --add sublimehq-pub.gpg && sudo pacman-key --lsign-key 8A8F901A && rm sublimehq-pub.gpg
-    yay -Sy alacritty nautilus file-roller unrar unzip p7zip zip \
+    curl -O https://download.sublimetext.com/sublimehq-pub.gpg
+    sudo pacman-key --add sublimehq-pub.gpg
+    sudo pacman-key --lsign-key 8A8F901A
+    rm sublimehq-pub.gpg
+    yay -Sy alacritty nautilus file-roller unrar unzip p7zip zip gvfs-goa gvfs-google gvfs-mtp \
       google-chrome-stable discord steam telegram-desktop qbittorrent vlc heroic-games-launcher-bin visual-studio-code-bin sublime-text \
       wine-staging wine-mono wine-gecko lutris winetricks \
-      evince eog gparted gnome-disks libreoffice-fresh libreoffice-fresh-pt-br
+      evince eog gparted gnome-disks libreoffice-fresh libreoffice-fresh-pt-br \
+      baobab gnome-calculator gnome-characters extension-manager qt5ct \
+      pipewire pipewire-pulse lib32-pipewire lib32-pipewire-pulse wirepumbler pavucontrol \
+      yarn nodejs npm
     flatpak install flathub com.spotify.Client
+
+    ## Lunarvim install
+    bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
+    sudo pip install pynvim
+    sudo npm i -g neovim
+    
+    ## Enable GDM service
+    sudo systemctl enable gdm.service
   fi
   
 elif [[ "$OSTYPE" == "darwin" ]]; then
   echo "OS: Mac OS"
+  read answer
+  if [[ "$answer" == "n" ]]; then
+    echo "Bye"
+  else
+    ## Homebrew install
+    echo "Installing Homebrew"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   
+    ## Clone Dotfiles
+    echo "Cloning Dotfiles"
+    git clone https://github.com/FhilipeCrash/Dotfiles
+
+    ## Zsh install
+    echo "Installing ZSH and Oh My Zsh"
+    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    cp ~/Dotfiles/.zshrc ~/
+    cp ~/Dotfiles/.yarnrc ~/
+    
+    ## Install useful programs
+    echo "Installing all environment programs"
+    brew install --cask discord spotify google-chrome telegram-desktop visual-studio-code sublime-text qbittorrent vlc \
+      node python
+  fi
 fi
