@@ -5,7 +5,7 @@
 I created this script because it was always a problem to configure my work environment on all my systems.
 There are a lot of settings and sometimes I forget something, so this automation will help
 
-- [ ] Add Arch Linux post install code
+- [x] Add Arch Linux post install code
 - [ ] Add Mac OS post install code
 - [ ] Add Windows post install code
 - [ ] Make script versions
