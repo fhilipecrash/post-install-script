@@ -8,7 +8,7 @@ There are a lot of settings and sometimes I forget something, so this automation
 - [ ] Add Arch Linux post install code
 - [ ] Add Mac OS post install code
 - [ ] Add Windows post install code
-- [ ] Make script versions
- - [ ] Unix-like systems version
- - [ ] DOS version
- - [ ] Cross-platform version with Python
+  - [ ] Make script versions
+  - [ ] Unix-like systems version
+  - [ ] DOS version
+  - [ ] Cross-platform version with Python
