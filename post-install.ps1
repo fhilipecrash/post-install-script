@@ -1,15 +1,6 @@
 ## winget upgrade --all <- Update all winget apps
 ## sudo cup all -y <- Update all choco apps
 
-## Allow to run any script
-Set-ExecutionPolicy AllSigned -Scope CurrentUser
-
-## Install Chocolatey
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-
-## Install packages with choco
-choco install sudo neovim -y
-
 ## Install PowerShell 7
 winget install --id=Microsoft.PowerShell -e
 
@@ -33,7 +24,17 @@ winget install --id=Oracle.JavaRuntimeEnvironment -e
 winget install --id=Mega.MEGASync -e 
 winget install --id=Stremio.Stremio -e 
 winget install --id=CPUID.CPU-Z -e 
-winget install --id=RiotGames.LeagueOfLegends.BR -e 
 winget install --id=Microsoft.VC++2010Redist-x86 -e 
 winget install --id=9NGHP3DX8HDX -e 
-winget install --id=9MTFTXSJ9M7F -e
+
+## Allow to run any script
+Set-ExecutionPolicy AllSigned -Scope CurrentUser
+
+## Install Scoop
+iwr -useb get.scoop.sh | iex
+
+## Install packages with scoop
+scoop install sudo neovim gcc make wget lua fzf
+
+## Install LunarVim
+iwr https://raw.githubusercontent.com/LunarVim/LunarVim/master/utils/installer/install.ps1 -UseBasicParsing | iex
