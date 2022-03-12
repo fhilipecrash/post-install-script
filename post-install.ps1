@@ -1,8 +1,13 @@
 ## winget upgrade --all <- Update all winget apps
-## sudo cup all -y <- Update all choco apps
+## scoop update -a <- Update all scoop apps
 
 ## Install PowerShell 7
 winget install --id=Microsoft.PowerShell -e
+
+## Install PowerShell Modules
+Install-Module PSReadLine -AllowPrerelease -Force
+Install-Module -Name Terminal-Icons -Repository PSGallery
+Install-Module -Name z
 
 ## Install packages with winget
 winget install --id=OpenJS.NodeJS -e 
