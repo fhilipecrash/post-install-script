@@ -71,15 +71,23 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     yay -S xorg-xinit xorg-xinit xorg-xkill xf86-video-intel 
 
     ## Gnome minimal install
-    echo "Installing GNOME with mutter-rounded"
-    yay -S gnome-shell gnome-tweak-tool gnome-control-center xdg-user-dirs gdm mutter-rounded gnome-online-accounts
-    
+    echo "Installing GNOME with mutter-rounded and Gtk theme"
+    yay -S gnome-shell gnome-tweak-tool gnome-control-center xdg-user-dirs \
+      gdm mutter-rounded gnome-online-accounts nautilus-open-any-terminal \
+      flat-remix-gnome flat-remix-gtk papirus-icon-theme papirus-folders-git
+ 
     ## Gnome tweaks
+    echo "Configuring GNOME"
     gsettings set org.gnome.shell.app-switcher current-workspace-only true
     gsettings set org.gnome.desktop.wm.preferences button-layout ‘close,minimize,maximize:appmenu’
     gsettings set org.gnome.mutter round-corners-radius 12
+    gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal alacritty
+    gsettings set org.gnome.desktop.interface gtk-theme "Flat-Remix-GTK-Green-Dark"
+    gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
+    gsettings set org.gnome.shell.extensions.user-theme name "Flat-Remix-Green-Dark-fullPanel" 
+    papirus-folders -C teal --theme Papirus-Dark
 
-    ## Install useful programs
+    ## Install my programs
     echo "Installing all environment programs"
     echo -e "\n[sublime-text]\nServer = https://download.sublimetext.com/arch/stable/x86_64" | sudo tee -a /etc/pacman.conf
     curl -O https://download.sublimetext.com/sublimehq-pub.gpg
@@ -87,7 +95,8 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     sudo pacman-key --lsign-key 8A8F901A
     rm sublimehq-pub.gpg
     yay -Sy alacritty nautilus file-roller unrar unzip p7zip zip gvfs-goa gvfs-google gvfs-mtp \
-      google-chrome-stable discord steam telegram-desktop qbittorrent vlc heroic-games-launcher-bin visual-studio-code-bin sublime-text \
+      google-chrome-stable discord steam telegram-desktop qbittorrent vlc heroic-games-launcher-bin \
+      visual-studio-code-bin sublime-text \
       wine-staging wine-mono wine-gecko lutris winetricks \
       evince eog gparted gnome-disks libreoffice-fresh libreoffice-fresh-pt-br \
       baobab gnome-calculator gnome-characters extension-manager qt5ct \
@@ -96,9 +105,9 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     flatpak install flathub com.spotify.Client
 
     ## Lunarvim install
-    bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
     sudo pip install pynvim
     sudo npm i -g neovim
+    bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
     
     ## Enable GDM service
     sudo systemctl enable gdm.service
