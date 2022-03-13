@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+  Post-install script for Windows configuration
+.DESCRIPTION
+  Script that configures my entire working environment on Windows,
+  installing programs with winget, installing scoop along with some utilities
+  and configuring Windows Terminal, PowerShell, LunarVim and WSL2
+.NOTES
+  Version:        0.1
+  Author:         Fhilipe Coelho <coelhocrash11@gmail.com>
+  Creation Date:  2022-03-11
+  Purpose/Change: Help configuring my desktop in Windows  
+.EXAMPLE
+  <Example goes here. Repeat this attribute for more than one example>
+#>
 ## winget upgrade --all <- Update all winget apps
 ## sudo cup all -y <- Update all choco apps
 
