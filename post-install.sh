@@ -14,17 +14,29 @@
 #
 # --------------------------------------------------------------
 #
+# HOW TO USE?
+#   $ ./post-install.sh
 #
 # Changelog:
 #
 #
 #   v0.1 2022-03-09, Fhilipe Coelho:
 #      - First version with some tweaks to Arch Linux install
+#   v0.2 2022-03-13, Fhilipe Coelho:
+#      - Arch Linux installation finished and mac installation started
 #
 # License: GPL v3.
 #
-echo $'Post install script by Fhilipe\nWould you like to perform the post install configuration? [Y/n]\n'
 
+# TODO add screens to script with dialog
+#
+# dialog --clear --backtitle "Post-install script" --title "Welcome to my script" --menu "Choose one of the following options:" 15 40 4 \
+# 1 "Option 1" \
+# 2 "Option 2" \
+# 3 "Option 3"
+#
+#
+echo $'Post install script by Fhilipe\nWould you like to perform the post install configuration? [Y/n]\n'
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   echo "OS: Arch Linux"
@@ -101,7 +113,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
       evince eog gparted gnome-disks libreoffice-fresh libreoffice-fresh-pt-br \
       baobab gnome-calculator gnome-characters extension-manager qt5ct \
       pipewire pipewire-pulse lib32-pipewire lib32-pipewire-pulse wirepumbler pavucontrol \
-      yarn nodejs npm
+      yarn nodejs npm exa
     flatpak install flathub com.spotify.Client
 
     ## Lunarvim install
