@@ -62,3 +62,19 @@ scoop install sudo neovim gcc make curl wget lua fzf
 ## Install LunarVim
 Write-Output "Installing LunarVim"
 Invoke-WebRequest https://raw.githubusercontent.com/LunarVim/LunarVim/master/utils/installer/install.ps1 -UseBasicParsing | Invoke-Expression
+
+## WSL configuration
+wsl --install
+wget https://github.com/yuk7/ArchWSL/releases/download/22.2.10.0/ArchWSL-AppX_22.2.10.0_x64.appx
+wget https://github.com/yuk7/ArchWSL/releases/download/22.2.10.0/ArchWSL-AppX_22.2.10.0_x64.cer
+Add-AppxPackage -Path ArchWSL-AppX_22.2.10.0_x64.appx
+Arch.exe passwd
+Arch.exe echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/wheel
+Arch.exe pacman -S zsh
+Arch.exe useradd -m -G wheel -s /usr/bin/zsh fhilipe
+Arch.exe passwd fhilipe
+Arch.exe config --default-user fhilipe
+Arch.exe sudo pacman-key --init
+Arch.exe sudo pacman-key --populate
+Arch.exe sudo pacman -Syy archlinux-keyring
+
