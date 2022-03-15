@@ -18,6 +18,7 @@
 
 ## Install PowerShell 7
 winget install --id=Microsoft.PowerShell -e
+winget install --id=JanDeDobbeleer.OhMyPosh -e
 
 ## Install PowerShell Modules
 Install-Module PSReadLine -AllowPrerelease -Force
@@ -58,3 +59,4 @@ scoop install sudo neovim gcc make wget lua fzf
 
 ## Install LunarVim
 iwr https://raw.githubusercontent.com/LunarVim/LunarVim/master/utils/installer/install.ps1 -UseBasicParsing | iex
+
