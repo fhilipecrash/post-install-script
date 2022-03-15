@@ -40,14 +40,13 @@ add_pkg() {
 }
 
 clear
-echo -e $'Post install script by Fhilipe\nWould you like to perform the post install configuration? [Y/n]\n'
+echo -e $'Post install script by Fhilipe'
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-  echo -e "OS: Arch Linux"
-  read answer
-  if [[ "$answer" == "n" ]]; then
-    echo -e "Bye"
-  else
+  echo -e "OS: Arch Linux\n"
+  read -p "Would you like to perform the post install configuration? [Y/n]" answer
+  answer=${answer:-y}
+  if [[ "$answer" == [Yy] ]]; then
     ## Enable multilib
     echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Enabling multilib repo${NORMAL}"
     sudo sed -i '/multilib\]/,+1 s/^#//' /etc/pacman.conf
@@ -132,7 +131,6 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
       esac
     done
     
-    # FIXME This line of code is not working, fix it later
     yay -S $PKG_LIST alacritty nautilus file-roller unrar unzip p7zip zip gvfs-goa gvfs-google gvfs-mtp \
     wine-staging wine-mono wine-gecko lutris winetricks evince eog gparted gnome-disk-utility \
     baobab gnome-calculator gnome-characters extension-manager qt5ct \
@@ -148,14 +146,15 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     ## Enable GDM service
     sudo systemctl enable gdm.service
     sudo systemctl enable pipewire-pulse.service
+  else
+    echo -e "Bye"
   fi
   
-elif [[ "$OSTYPE" == "darwin" ]]; then
-  echo -e "OS: Mac OS"
-  read answer
-  if [[ "$answer" == "n" ]]; then
-    echo -e "Bye"
-  else
+elif [[ "$OSTYPE" == "darwin" ]]; then 
+  echo -e "OS: Mac OS\n"
+  read -p "Would you like to perform the post install configuration? [Y/n]" answer
+  answer=${answer:-y}
+  if [[ "$answer" == [Yy] ]]; then
     ## Homebrew install
     echo -e "Installing Homebrew"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -177,11 +176,15 @@ elif [[ "$OSTYPE" == "darwin" ]]; then
     echo -e "Installing all environment programs"
     brew install --cask discord spotify google-chrome telegram-desktop visual-studio-code sublime-text qbittorrent vlc
     brew node python
-  fi
-elif [[ $(grep Microsoft /proc/version) ]]; then
-  if [[ "$answer" == "n" ]]; then
-    echo -e "Bye"
   else
+    echo -e "Bye"
+  fi
+elif [[ $(grep Microsoft /proc/version) ]]; then 
+  echo -e "OS: Arch Linux WSL\n"
+  read -p "Would you like to perform the post install configuration? [Y/n]" answer
+  answer=${answer:-y}
+  if [[ "$answer" == [Yy] ]]; then
+    ## Arch WSL initial configuration
     passwd
     echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/wheel
     pacman -S zsh
@@ -190,6 +193,8 @@ elif [[ $(grep Microsoft /proc/version) ]]; then
     config --default-user fhilipe
     sudo pacman-key --init
     sudo pacman-key --populate
-    sudo pacman -Syy archlinux-keyring
+    sudo pacman -Syy archlinux-keyring 
+  else
+    echo -e "Bye"
   fi
 fi

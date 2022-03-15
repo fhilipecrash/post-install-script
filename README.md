@@ -11,4 +11,3 @@ There are a lot of settings and sometimes I forget something, so this automation
 - [ ] Make script versions
   - [ ] Unix-like systems version
   - [ ] DOS version
-  - [ ] Cross-platform version with Python
