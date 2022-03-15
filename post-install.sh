@@ -21,7 +21,10 @@
 #
 
 # Variables
-pkg_list=""
+PKG_LIST=""
+BLUE="\033[1;34m"
+NORMAL="\033[0m"
+BOLD="\033[1m"
 
 # Function
 add_pkg() {
@@ -29,96 +32,86 @@ add_pkg() {
     read -p "$2 [Y/n]" answer
     answer=${answer:-y}
     case $answer in
-      [Yy]* ) pkg_list+="$1 "; break;;
+      [Yy]* ) PKG_LIST+="$1 "; break;;
       [Nn]* ) exit;;
-      * ) echo "Please answer Y or N";;
+      * ) echo -e "Please answer Y or N";;
     esac
   done
 }
 
 clear
-echo $'Post install script by Fhilipe\nWould you like to perform the post install configuration? [Y/n]\n'
+echo -e $'Post install script by Fhilipe\nWould you like to perform the post install configuration? [Y/n]\n'
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-  echo "OS: Arch Linux"
+  echo -e "OS: Arch Linux"
   read answer
   if [[ "$answer" == "n" ]]; then
-    echo "Bye"
+    echo -e "Bye"
   else
     ## Enable multilib
-    echo "=====> Enabling multilib repo"
-    sudo sed -i '/multilib\]/,+1 s/^#//' /etc/pacman.conf > /dev/null
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Enabling multilib repo${NORMAL}"
+    sudo sed -i '/multilib\]/,+1 s/^#//' /etc/pacman.conf
 
-    echo "=====> Installing Git"
-    yay -Sy git > /dev/null
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing Git${NORMAL}"
+    yay -Sy git
 
     ## Clone Dotfiles
-    echo "=====> Cloning Dotfiles"
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Cloning Dotfiles${NORMAL}"
     git clone https://github.com/FhilipeCrash/Dotfiles
 
     ## Yay install
-    echo "=====> Installing Yay"
-    {
-      git clone https://aur.archlinux.org/yay.git
-      cd yay
-      makepkg -si
-      yay -S yay-git
-    } > /dev/null
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing Yay${NORMAL}"
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    makepkg -si
+    yay -S yay-git
 
     ## Enable flatpak support
-    echo "=====> Installing Flatpak"
-    yay -S flatpak > /dev/null
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing Flatpak${NORMAL}"
+    yay -S flatpak
 
     ## Zsh install 
-    echo "=====> Installing ZSH and Oh My Zsh"
-    {
-      yay -S zsh
-      sudo chsh -s /usr/bin/zsh
-      sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-      git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-      git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-      git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-      cp ~/Dotfiles/.zshrc ~/
-      cp ~/Dotfiles/.yarnrc ~/
-      cp -r ~/Dotfiles/.local/share/applications/ ~/.local/share/
-    } > /dev/null
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing ZSH and Oh My Zsh${NORMAL}"
+    yay -S zsh
+    chsh -s /usr/bin/zsh
+    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    cp ~/Dotfiles/.zshrc ~/
+    cp ~/Dotfiles/.yarnrc ~/
+    cp -r ~/Dotfiles/.local/share/applications/ ~/.local/share/
 
     ## Xorg and drivers install
-    echo "=====> Installing Xorg and drivers"
-    yay -S xorg-xinit xorg-xinit xorg-xkill xf86-video-intel > /dev/null
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing Xorg and drivers${NORMAL}"
+    yay -S xorg-xinit xorg-xinit xorg-xkill xf86-video-intel
 
     ## Gnome minimal install
-    echo "=====> Installing GNOME with mutter-rounded and Gtk theme"
-    {
-      yay -S gnome-shell gnome-tweak-tool gnome-control-center xdg-user-dirs \
-      gdm mutter-rounded gnome-online-accounts nautilus-open-any-terminal \
-      flat-remix-gnome flat-remix-gtk papirus-icon-theme papirus-folders-git
-    } > /dev/null
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing GNOME with mutter-rounded and Gtk theme${NORMAL}"
+    yay -S gnome-shell gnome-tweak-tool gnome-control-center xdg-user-dirs \
+    gdm mutter-rounded gnome-online-accounts nautilus-open-any-terminal \
+    flat-remix-gnome flat-remix-gtk papirus-icon-theme papirus-folders-git
  
     ## Gnome tweaks
-    echo "=====> Configuring GNOME"
-    {
-      gsettings set org.gnome.shell.app-switcher current-workspace-only true
-      gsettings set org.gnome.desktop.wm.preferences button-layout ‘,close,minimize,maximize:appmenu’
-      gsettings set org.gnome.mutter round-corners-radius 12
-      gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal alacritty
-      gsettings set org.gnome.desktop.interface gtk-theme "Flat-Remix-GTK-Green-Dark"
-      gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
-      gsettings set org.gnome.shell.extensions.user-theme name "Flat-Remix-Green-Dark-fullPanel" 
-      papirus-folders -C teal --theme Papirus-Dark
-    } > /dev/null
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Configuring GNOME${NORMAL}"
+    gsettings set org.gnome.shell.app-switcher current-workspace-only true
+    gsettings set org.gnome.desktop.wm.preferences button-layout ‘appmenu:minimize,maximize,close,’
+    gsettings set org.gnome.mutter round-corners-radius 12
+    gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal alacritty
+    gsettings set org.gnome.desktop.interface gtk-theme "Flat-Remix-GTK-Violet-Dark"
+    gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
+    gsettings set org.gnome.shell.extensions.user-theme name "Flat-Remix-Violet-Dark-fullPanel"
+    papirus-folders -C violet --theme Papirus-Dark
 
     ## Install my programs
-    echo "=====> Installing all environment programs"
-    {
-      echo -e "\n[sublime-text]\nServer = https://download.sublimetext.com/arch/stable/x86_64" | sudo tee -a /etc/pacman.conf
-      curl -O https://download.sublimetext.com/sublimehq-pub.gpg
-      sudo pacman-key --add sublimehq-pub.gpg
-      sudo pacman-key --lsign-key 8A8F901A
-      rm sublimehq-pub.gpg
-    } > /dev/null
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing all environment programs${NORMAL}"
+    echo -e "\n[sublime-text]\nServer = https://download.sublimetext.com/arch/stable/x86_64" | sudo tee -a /etc/pacman.conf
+    curl -O https://download.sublimetext.com/sublimehq-pub.gpg
+    sudo pacman-key --add sublimehq-pub.gpg
+    sudo pacman-key --lsign-key 8A8F901A
+    rm sublimehq-pub.gpg
 
-    add_pkg google-chrome-stable "Install Google Chrome?"
+    add_pkg google-chrome "Install Google Chrome?"
     add_pkg discord "Install Discord?"
     add_pkg telegram-desktop "Install Telegram?"
     add_pkg qbittorrent "Install qBittorrent?"
@@ -135,46 +128,44 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
       case $answer in
         [Yy]* ) flatpak install flathub com.spotify.Client; break;;
         [Nn]* ) exit;;
-        * ) echo "Please answer Y or N";;
+        * ) echo -e "Please answer Y or N";;
       esac
     done
     
     # FIXME This line of code is not working, fix it later
-    {
-      yay -S $pkg_list alacritty nautilus file-roller unrar unzip p7zip zip gvfs-goa gvfs-google gvfs-mtp \
-      wine-staging wine-mono wine-gecko lutris winetricks evince eog gparted gnome-disks \
-      baobab gnome-calculator gnome-characters extension-manager qt5ct \
-      pipewire pipewire-pulse lib32-pipewire lib32-pipewire-pulse wirepumbler pavucontrol \
-      yarn nodejs npm exa
-    } > /dev/null
+    yay -S $PKG_LIST alacritty nautilus file-roller unrar unzip p7zip zip gvfs-goa gvfs-google gvfs-mtp \
+    wine-staging wine-mono wine-gecko lutris winetricks evince eog gparted gnome-disk-utility \
+    baobab gnome-calculator gnome-characters extension-manager qt5ct \
+    pipewire pipewire-pulse pipewire-alse lib32-pipewire wireplumber pavucontrol \
+    yarn nodejs npm exa
 
-    ## Lunarvim install
-    {
-      sudo pip install pynvim
-      sudo npm i -g neovim
-      bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
-    } > /dev/null
+    ## LunarVim install
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing LunarVim${NORMAL}"
+    sudo pip install pynvim
+    sudo npm i -g neovim
+    bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
     
     ## Enable GDM service
-    sudo systemctl enable gdm.service > /dev/null
+    sudo systemctl enable gdm.service
+    sudo systemctl enable pipewire-pulse.service
   fi
   
 elif [[ "$OSTYPE" == "darwin" ]]; then
-  echo "OS: Mac OS"
+  echo -e "OS: Mac OS"
   read answer
   if [[ "$answer" == "n" ]]; then
-    echo "Bye"
+    echo -e "Bye"
   else
     ## Homebrew install
-    echo "Installing Homebrew"
+    echo -e "Installing Homebrew"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    
     ## Clone Dotfiles
-    echo "Cloning Dotfiles"
+    echo -e "Cloning Dotfiles"
     git clone https://github.com/FhilipeCrash/Dotfiles
 
     ## Zsh install
-    echo "Installing ZSH and Oh My Zsh"
+    echo -e "Installing ZSH and Oh My Zsh"
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
@@ -183,7 +174,7 @@ elif [[ "$OSTYPE" == "darwin" ]]; then
     cp ~/Dotfiles/.yarnrc ~/
     
     ## Install useful programs
-    echo "Installing all environment programs"
+    echo -e "Installing all environment programs"
     brew install --cask discord spotify google-chrome telegram-desktop visual-studio-code sublime-text qbittorrent vlc
     brew node python
   fi

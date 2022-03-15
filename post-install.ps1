@@ -57,7 +57,7 @@ Invoke-WebRequest -useb get.scoop.sh | Invoke-Expression
 
 ## Install packages with scoop
 Write-Output "Installing scoop packages"
-scoop install sudo neovim gcc make curl lua fzf
+scoop install sudo neovim gcc make curl wget lua fzf
 
 ## Install LunarVim
 Write-Output "Installing LunarVim"
