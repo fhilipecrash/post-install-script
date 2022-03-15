@@ -39,6 +39,22 @@ add_pkg() {
   done
 }
 
+install_ohmyzsh() {
+  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+  cp ~/Dotfiles/.zshrc ~/
+  cp ~/Dotfiles/.yarnrc ~/
+}
+
+install_yay() {
+  git clone https://aur.archlinux.org/yay.git
+  cd yay
+  makepkg -si
+  yay -S yay-git
+}
+
 clear
 echo -e $'Post install script by Fhilipe'
 
@@ -60,10 +76,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
     ## Yay install
     echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing Yay${NORMAL}"
-    git clone https://aur.archlinux.org/yay.git
-    cd yay
-    makepkg -si
-    yay -S yay-git
+    install_yay()
 
     ## Enable flatpak support
     echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing Flatpak${NORMAL}"
@@ -73,12 +86,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing ZSH and Oh My Zsh${NORMAL}"
     yay -S zsh
     chsh -s /usr/bin/zsh
-    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-    cp ~/Dotfiles/.zshrc ~/
-    cp ~/Dotfiles/.yarnrc ~/
+    install_ohmyzsh()
     cp -r ~/Dotfiles/.local/share/applications/ ~/.local/share/
 
     ## Xorg and drivers install
@@ -165,13 +173,8 @@ elif [[ "$OSTYPE" == "darwin" ]]; then
 
     ## Zsh install
     echo -e "Installing ZSH and Oh My Zsh"
-    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-    cp ~/Dotfiles/.zshrc ~/
-    cp ~/Dotfiles/.yarnrc ~/
-    
+    install_ohmyzsh()
+
     ## Install useful programs
     echo -e "Installing all environment programs"
     brew install --cask discord spotify google-chrome telegram-desktop visual-studio-code sublime-text qbittorrent vlc
@@ -185,6 +188,7 @@ elif [[ $(grep Microsoft /proc/version) ]]; then
   answer=${answer:-y}
   if [[ "$answer" == [Yy] ]]; then
     ## Arch WSL initial configuration
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Arch WSL initital configuration${NORMAL}"
     passwd
     echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/wheel
     pacman -S zsh
@@ -194,6 +198,14 @@ elif [[ $(grep Microsoft /proc/version) ]]; then
     sudo pacman-key --init
     sudo pacman-key --populate
     sudo pacman -Syy archlinux-keyring 
+
+    ## Install Oh My Zsh
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing ZSH and Oh My Zsh${NORMAL}"
+    install_ohmyzsh()
+    
+    ## Install Yay
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing Yay${NORMAL}"
+    install_yay()
   else
     echo -e "Bye"
   fi
