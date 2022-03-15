@@ -62,3 +62,4 @@ scoop install sudo neovim gcc make curl lua fzf
 ## Install LunarVim
 Write-Output "Installing LunarVim"
 Invoke-WebRequest https://raw.githubusercontent.com/LunarVim/LunarVim/master/utils/installer/install.ps1 -UseBasicParsing | Invoke-Expression
+
