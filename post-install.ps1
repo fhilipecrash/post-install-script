@@ -50,10 +50,11 @@ winget install --id=9NGHP3DX8HDX -e
 Set-ExecutionPolicy AllSigned -Scope CurrentUser
 
 ## Install Scoop
-iwr -useb get.scoop.sh | iex
+Invoke-WebRequest -useb get.scoop.sh | Invoke-Expression
 
 ## Install packages with scoop
 scoop install sudo neovim gcc make curl lua fzf
 
 ## Install LunarVim
-iwr https://raw.githubusercontent.com/LunarVim/LunarVim/master/utils/installer/install.ps1 -UseBasicParsing | iex
+Invoke-WebRequest https://raw.githubusercontent.com/LunarVim/LunarVim/master/utils/installer/install.ps1 -UseBasicParsing | Invoke-Expression
+
