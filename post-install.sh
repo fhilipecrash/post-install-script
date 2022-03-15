@@ -178,4 +178,18 @@ elif [[ "$OSTYPE" == "darwin" ]]; then
     brew install --cask discord spotify google-chrome telegram-desktop visual-studio-code sublime-text qbittorrent vlc
     brew node python
   fi
+elif [[ $(grep Microsoft /proc/version) ]]; then
+  if [[ "$answer" == "n" ]]; then
+    echo -e "Bye"
+  else
+    passwd
+    echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/wheel
+    pacman -S zsh
+    useradd -m -G wheel -s /usr/bin/zsh fhilipe
+    passwd fhilipe
+    config --default-user fhilipe
+    sudo pacman-key --init
+    sudo pacman-key --populate
+    sudo pacman -Syy archlinux-keyring
+  fi
 fi
