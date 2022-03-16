@@ -55,6 +55,12 @@ install_yay() {
   yay -S yay-git
 }
 
+install_lunarvim() {
+  sudo pip install pynvim
+  sudo npm i -g neovim
+  bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
+}
+
 clear
 echo -e $'Post install script by Fhilipe'
 
@@ -76,7 +82,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
     ## Yay install
     echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing Yay${NORMAL}"
-    install_yay()
+    install_yay
 
     ## Enable flatpak support
     echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing Flatpak${NORMAL}"
@@ -86,7 +92,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing ZSH and Oh My Zsh${NORMAL}"
     yay -S zsh
     chsh -s /usr/bin/zsh
-    install_ohmyzsh()
+    install_ohmyzsh
     cp -r ~/Dotfiles/.local/share/applications/ ~/.local/share/
 
     ## Xorg and drivers install
@@ -147,9 +153,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
     ## LunarVim install
     echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing LunarVim${NORMAL}"
-    sudo pip install pynvim
-    sudo npm i -g neovim
-    bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
+    install_lunarvim
     
     ## Enable GDM service
     sudo systemctl enable gdm.service
@@ -173,7 +177,7 @@ elif [[ "$OSTYPE" == "darwin" ]]; then
 
     ## Zsh install
     echo -e "Installing ZSH and Oh My Zsh"
-    install_ohmyzsh()
+    install_ohmyzsh
 
     ## Install useful programs
     echo -e "Installing all environment programs"
@@ -201,11 +205,19 @@ elif [[ $(grep Microsoft /proc/version) ]]; then
 
     ## Install Oh My Zsh
     echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing ZSH and Oh My Zsh${NORMAL}"
-    install_ohmyzsh()
+    install_ohmyzsh
     
     ## Install Yay
     echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing Yay${NORMAL}"
-    install_yay()
+    install_yay
+
+    ## Install environment packages
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing all environment programs${NORMAL}"
+    yay -S npm yarn nodejs python lua exa
+
+    ## Install LunvarVim
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing LunarVim${NORMAL}"
+    install_lunarvim
   else
     echo -e "Bye"
   fi
