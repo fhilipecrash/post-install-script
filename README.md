@@ -1,6 +1,6 @@
 # Post-install script for mine
 
-# Notes from my script
+## Notes from my script
 ### Todo list
 - [ ] Add more functions to make the code cleaner
 - [x] Add Arch WSL installation commands in Unix Script
