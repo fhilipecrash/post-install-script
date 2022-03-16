@@ -168,21 +168,21 @@ elif [[ "$OSTYPE" == "darwin" ]]; then
   answer=${answer:-y}
   if [[ "$answer" == [Yy] ]]; then
     ## Homebrew install
-    echo -e "Installing Homebrew"
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing Homebrew${NORMAL}"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    
     ## Clone Dotfiles
-    echo -e "Cloning Dotfiles"
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Cloning Dotfiles${NORMAL}"
     git clone https://github.com/FhilipeCrash/Dotfiles
 
     ## Zsh install
-    echo -e "Installing ZSH and Oh My Zsh"
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing ZSH and Oh My Zsh${NORMAL}"
     install_ohmyzsh
 
     ## Install useful programs
-    echo -e "Installing all environment programs"
+    echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing all environment programsi${NORMAL}"
     brew install --cask discord spotify google-chrome telegram-desktop visual-studio-code sublime-text qbittorrent vlc
-    brew node python
+    brew install node python yarn exa
   else
     echo -e "Bye"
   fi
@@ -222,3 +222,4 @@ elif [[ $(grep Microsoft /proc/version) ]]; then
     echo -e "Bye"
   fi
 fi
+

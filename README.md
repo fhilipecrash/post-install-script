@@ -1,13 +1,52 @@
-# Post install script
+# Post-install script for mine
 
-## **IMPORTANT**: This script will be merged in my [dotfiles](https://github.com/FhilipeCrash/Dotfiles) when it is ready.
+# Notes from my script
+### Todo list
+- [ ] Add more functions to make the code cleaner
+- [x] Add Arch WSL installation commands in Unix Script
+- [ ] Save LunarVim configurations(Windows and Linux)
+- [x] Terminate the Mac OS installation script
+---
+### Features
+- ##### Arch Linux
+  - Enable multilib on pacman
+  - Install Yay grabber
+  - Install Flatpak support
+  - Install Zsh and configure Oh My Zsh
+  - Install Xorg and Gnome minimal
+  - Configure Gnome themes and behavior
+  - Install all my programs
+  - Install LunarVim
+  - Enable systemd services
+- ##### Windows
+  - Allows unsafe script installations
+  - Install PowerShell 7 and configure Oh My Posh
+  - Install PowerShell Modules
+  - Install Winget packages
+  - Install Scoop packages
+  - Install LunarVim
+  - Install WSL2
+  - Install Arch WSL container
+  - Configure Arch WSL
+  - Install Zsh and configure Oh My Zsh on Arch
+  - Install LunarVim on Arch
+- ##### Mac OS
+  - Install Homebrew
+  - Install and configure Oh My Zsh
+  - Install packages with Brew
+  - Install GUI packages with Brew Cask
 
-I created this script because it was always a problem to configure my work environment on all my systems.
-There are a lot of settings and sometimes I forget something, so this automation will help
+**IMPORTANT**: Use this script on a fresh system install, when using on Arch it is preferable that it is after creating your user
 
-- [x] Add Arch Linux post install code
-- [ ] Add Mac OS post install code
-- [ ] Add Windows post install code
-- [ ] Make script versions
-  - [ ] Unix-like systems version
-  - [ ] DOS version
+---
+### Usage
+
+#### Arch Linux, Arch WSL and Mac OS
+```shell
+$ ./post-install.sh
+```
+
+#### Windows
+```powershell
+.\post-install.ps1
+```
