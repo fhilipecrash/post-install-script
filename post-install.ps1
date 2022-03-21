@@ -53,6 +53,13 @@ if ( $Answer -is [Yy] ) {
   winget install --id=Microsoft.VC++2010Redist-x86 -e
   winget install --id=9NGHP3DX8HDX -e
 
+  ## Clone Dotfiles
+  git clone https://github.com/FhilipeCrash/Dotfiles.git
+  Set-Location Dotfiles
+
+  ## Install Windows Terminal configuration
+  Copy-Item settings.json $Env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\
+
   ## Allow to run any script
   sudo Set-ExecutionPolicy AllSigned -Scope CurrentUser
 
