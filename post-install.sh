@@ -134,16 +134,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     add_pkg "libreoffice-fresh libreoffice-fresh-pt-br" "Install LibreOffice?"
     add_pkg heroic-games-launcher-bin "Install Heroic Games Launcher?"
     add_pkg "steam steam-native-runtime" "Install Steam?"
-
-    while true; do
-      read -p "Install Spotify?[Y/n]" answer
-      answer=${answer:-y}
-      case $answer in
-        [Yy]* ) flatpak install flathub com.spotify.Client; break;;
-        [Nn]* ) exit;;
-        * ) echo -e "Please answer Y or N";;
-      esac
-    done
+    add_pkg spotify "Install Spotify?"
     
     yay -S $PKG_LIST alacritty nautilus file-roller unrar unzip p7zip zip gvfs-goa gvfs-google gvfs-mtp \
     wine-staging wine-mono wine-gecko lutris winetricks evince eog gparted gnome-disk-utility \
