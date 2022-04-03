@@ -13,10 +13,9 @@
 ---
 ### Usage
 
-#### Arch Linux, Arch WSL and Mac OS
-
 **IMPORTANT**: Use this script on a fresh system install, when using on Arch it is preferable that it is after creating your user
 
+#### Arch Linux, Arch WSL and Mac OS
 ```shell
 $ ./post-install.sh
 ```
