@@ -19,14 +19,18 @@
 #
 # License: GPL v3.
 #
+# Changelog:
+#   v0.1 2022-03-16, Fhilipe Coelho:
+#      - Initial version with support to Arch Linux, Mac OS and Arch WSl
 
-### Variables
+################### VARIABLES ###################
 PKG_LIST=""
+DIALOGRC="dialog-colors"
 BLUE="\033[1;34m"
 NORMAL="\033[0m"
 BOLD="\033[1m"
 
-### Functions
+################### FUNCTIONS ###################
 add_pkg() {
 	while true; do
 		read -p "$2 [Y/n]" answer
@@ -61,15 +65,18 @@ install_lunarvim() {
 	bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
 }
 
-### Main
-clear
-echo -e $'Post install script by Fhilipe'
+initial_screen() {
+    dialog                                           \
+        --stdout                                     \
+	    --backtitle "Post-install script" 			 \
+   	    --title "OS detected: $1"              \
+   	    --yesno "\nWould you like to perform the post install configuration?" 8 50
+}
 
+################### MAIN ###################
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-	echo -e "OS: Arch Linux\n"
-	read -p "Would you like to perform the post install configuration? [Y/n]" answer
-	answer=${answer:-y}
-	if [[ "$answer" == [Yy] ]]; then
+    initial_screen "Arch Linux"
+	if [[ $? == "0" ]]; then
 		## Enable multilib
 		echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Enabling multilib repo${NORMAL}"
 		sudo sed -i '/multilib\]/,+1 s/^#//' /etc/pacman.conf
