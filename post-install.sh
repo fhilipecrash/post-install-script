@@ -23,14 +23,17 @@
 #   v0.1 2022-03-16, Fhilipe Coelho:
 #      - Initial version with support to Arch Linux, Mac OS and Arch WSl
 
+set -e
 ################### VARIABLES ###################
 PKG_LIST=""
-DIALOGRC="dialog-colors"
-BLUE="\033[1;34m"
-NORMAL="\033[0m"
-BOLD="\033[1m"
+export DIALOGRC=dialog-colors
+#BLUE="\033[1;34m"
+#NORMAL="\033[0m"
+#BOLD="\033[1m"
 
 ################### FUNCTIONS ###################
+
+### INSTALL FUNCTIONS
 add_pkg() {
 	while true; do
 		read -p "$2 [Y/n]" answer
@@ -65,56 +68,68 @@ install_lunarvim() {
 	bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
 }
 
+enable_multilib() {
+    sleep 2
+    sudo sed -i '/multilib\]/,+1 s/^#//' /etc/pacman.conf
+}
+
+### DIALOG SCREENS
 initial_screen() {
-    dialog                                           \
-        --stdout                                     \
-	    --backtitle "Post-install script" 			 \
-   	    --title "OS detected: $1"              \
+    dialog                               \
+        --stdout                         \
+	    --backtitle "Post-install script"\
+   	    --title "OS detected: $1"        \
    	    --yesno "\nWould you like to perform the post install configuration?" 8 50
+}
+
+dialog_infobox() {
+    dialog                               \
+        --stdout                         \
+	    --backtitle "Post-install script"\
+   	    --title "$1"                     \
+   	    --infobox "\n$2" 0 0
 }
 
 ################### MAIN ###################
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
     initial_screen "Arch Linux"
 	if [[ $? == "0" ]]; then
-		## Enable multilib
-		echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Enabling multilib repo${NORMAL}"
-		sudo sed -i '/multilib\]/,+1 s/^#//' /etc/pacman.conf
+        dialog_infobox "Configuring" "Enabling multilib repo"
+        enable_multilib
 
-		echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing Git${NORMAL}"
+        dialog_infobox "Configuring" "Installing Git"
 		yay -Sy git
 
-		## Clone Dotfiles
-		echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Cloning Dotfiles${NORMAL}"
+        dialog_infobox "Configuring" "Cloning Dotfiles"
 		git clone https://github.com/FhilipeCrash/Dotfiles
 
 		## Yay install
-		echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing Yay${NORMAL}"
+        dialog_infobox "Configuring" "Installing Yay"
 		install_yay
 
 		## Enable flatpak support
-		echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing Flatpak${NORMAL}"
+        dialog_infobox "Configuring" "Installing Flatpak"
 		yay -S flatpak
 
 		## Zsh install 
-		echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing ZSH and Oh My Zsh${NORMAL}"
+        dialog_infobox "Configuring" "Installing ZSH and Oh My Zsh"
 		yay -S zsh
 		chsh -s /usr/bin/zsh
 		install_ohmyzsh
 		cp -r ~/Dotfiles/.local/share/applications/ ~/.local/share/
 
 		## Xorg and drivers install
-		echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing Xorg and drivers${NORMAL}"
+        dialog_infobox "Configuring" "Installing Xorg and drivers"
 		yay -S xorg-xinit xorg-xinit xorg-xkill xf86-video-intel
 
 		## Gnome minimal install
-		echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing GNOME with mutter-rounded and Gtk theme${NORMAL}"
+        dialog_infobox "Configuring" "Installing GNOME with mutter-rounded and Gtk theme"
 		yay -S gnome-shell gnome-tweak-tool gnome-control-center xdg-user-dirs \
 		gdm mutter-rounded gnome-online-accounts nautilus-open-any-terminal \
 		flat-remix-gnome flat-remix-gtk papirus-icon-theme papirus-folders-git
 	
 		## Gnome tweaks
-		echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Configuring GNOME${NORMAL}"
+        dialog_infobox "Configuring" "Configuring GNOME"
 		gsettings set org.gnome.shell.app-switcher current-workspace-only true
 		gsettings set org.gnome.desktop.wm.preferences button-layout ‘appmenu:minimize,maximize,close,’
 		gsettings set org.gnome.mutter round-corners-radius 12
@@ -125,7 +140,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 		papirus-folders -C violet --theme Papirus-Dark
 
 		## Install my programs
-		echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing all environment programs${NORMAL}"
+        dialog_infobox "Configuring" "Installing all environment programs"
 		echo -e "\n[sublime-text]\nServer = https://download.sublimetext.com/arch/stable/x86_64" | sudo tee -a /etc/pacman.conf
 		curl -O https://download.sublimetext.com/sublimehq-pub.gpg
 		sudo pacman-key --add sublimehq-pub.gpg
@@ -151,7 +166,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 		yarn nodejs npm exa
 
 		## LunarVim install
-		echo -e "${BLUE}=====> ${NORMAL} ${BOLD}Installing LunarVim${NORMAL}"
+        dialog_infobox "Configuring" "Installing LunarVim"
 		install_lunarvim
 		
 		## Enable GDM service
