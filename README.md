@@ -6,6 +6,22 @@
 - [x] Add Arch WSL installation commands in Unix Script
 - [ ] Save LunarVim configurations(Windows and Linux)
 - [x] Terminate the Mac OS installation script
+- [x] Put Windows configuration files on
+- [ ] Use dialog on Bash Script
+- [ ] Install all yay packages with one command
+- [ ] Check if the operation has already been done previously
+---
+### Usage
+
+#### Arch Linux, Arch WSL and Mac OS
+```shell
+$ ./post-install.sh
+```
+
+#### Windows
+```powershell
+.\post-install.ps1
+```
 ---
 ### Features
 - ##### Arch Linux
@@ -38,15 +54,3 @@
 
 **IMPORTANT**: Use this script on a fresh system install, when using on Arch it is preferable that it is after creating your user
 
----
-### Usage
-
-#### Arch Linux, Arch WSL and Mac OS
-```shell
-$ ./post-install.sh
-```
-
-#### Windows
-```powershell
-.\post-install.ps1
-```
