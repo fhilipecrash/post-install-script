@@ -14,6 +14,9 @@
 ### Usage
 
 #### Arch Linux, Arch WSL and Mac OS
+
+**IMPORTANT**: Use this script on a fresh system install, when using on Arch it is preferable that it is after creating your user
+
 ```shell
 $ ./post-install.sh
 ```
@@ -51,6 +54,4 @@ $ ./post-install.sh
   - Install and configure Oh My Zsh
   - Install packages with Brew
   - Install GUI packages with Brew Cask
-
-**IMPORTANT**: Use this script on a fresh system install, when using on Arch it is preferable that it is after creating your user
 
