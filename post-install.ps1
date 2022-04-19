@@ -61,7 +61,7 @@ if ( $Answer -is [Yy] ) {
 	Copy-Item settings.json $Env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\
 
 	## Allow to run any script
-	sudo Set-ExecutionPolicy AllSigned -Scope CurrentUser
+	Set-ExecutionPolicy AllSigned -Scope CurrentUser
 
 	## Install Scoop
 	Write-Output "Installing Scoop"
@@ -77,14 +77,14 @@ if ( $Answer -is [Yy] ) {
 
 	## Install WSL
 	Write-Output "Installing WSL"
-	sudo wsl --install
+	wsl --install
 
 	## Install Arch WSL
 	Write-Output "Installing Arch WSL"
-	wget https://github.com/yuk7/ArchWSL/releases/download/22.2.10.0/ArchWSL-AppX_22.2.10.0_x64.appx
-	wget https://github.com/yuk7/ArchWSL/releases/download/22.2.10.0/ArchWSL-AppX_22.2.10.0_x64.cer
-	sudo Import-Certificate -FilePath ArchWSL-AppX_22.2.10.0_x64.cer -CertStoreLocation Cert:\LocalMachine\TrustedPeople
-	sudo Add-AppxPackage -Path ArchWSL-AppX_22.2.10.0_x64.appx
+	Invoke-WebRequest https://github.com/yuk7/ArchWSL/releases/download/22.2.10.0/ArchWSL-AppX_22.2.10.0_x64.appx
+	Invoke-WebRequest https://github.com/yuk7/ArchWSL/releases/download/22.2.10.0/ArchWSL-AppX_22.2.10.0_x64.cer
+	Import-Certificate -FilePath ArchWSL-AppX_22.2.10.0_x64.cer -CertStoreLocation Cert:\LocalMachine\TrustedPeople
+	Add-AppxPackage -Path ArchWSL-AppX_22.2.10.0_x64.appx
 }
 else {
 	Write-Output "Bye"
