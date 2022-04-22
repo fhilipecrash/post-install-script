@@ -69,6 +69,13 @@ install_lunarvim() {
 	bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
 }
 
+install_asdf() {
+    git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.9.0
+    asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+    asdf plugin-add python
+    asdf plugin-add dotnet-core https://github.com/emersonsoares/asdf-dotnet-core.git
+}
+
 enable_multilib() {
     sleep 2
     sudo sed -i '/multilib\]/,+1 s/^#//' /etc/pacman.conf
