@@ -46,12 +46,13 @@ add_pkg() {
 	done
 }
 
-install_ohmyzsh() {
-	sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-	git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-	git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+install_starship() {
+    case $OSTYPE in
+        linux-gnu) yay -S starship zsh-autosuggestions zsh-syntax-highlighting;;
+        darwin) brew install starship zsh-autosuggestions zsh-syntax-highlighting;;
+    esac
 	cp ~/Dotfiles/.zshrc ~/
+	cp ~/Dotfiles/.profile ~/
 	cp ~/Dotfiles/.yarnrc ~/
 }
 
@@ -176,7 +177,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 		echo -e "Bye"
 	fi
 	
-	elif [[ "$OSTYPE" == "darwin" ]]; then 
+elif [[ "$OSTYPE" == "darwin" ]]; then 
 	echo -e "OS: Mac OS\n"
 	read -p "Would you like to perform the post install configuration? [Y/n]" answer
 	answer=${answer:-y}
@@ -200,7 +201,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 	else
 		echo -e "Bye"
 	fi
-	elif [[ $(grep Microsoft /proc/version) ]]; then 
+elif [[ $(grep Microsoft /proc/version) ]]; then 
 	echo -e "OS: Arch Linux WSL\n"
 	read -p "Would you like to perform the post install configuration? [Y/n]" answer
 	answer=${answer:-y}
